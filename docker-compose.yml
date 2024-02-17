@@ -2,16 +2,16 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16.2
-    container_name: my_postgres_container
+    container_name: finance_manager_database
     environment:
       - POSTGRES_DB=finance_manager
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=posgtres
+      - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
     volumes:
       - my_postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    restart: always
 
 volumes:
   my_postgres_data:
