@@ -4,9 +4,9 @@ services:
     image: postgres:16.2
     container_name: my_postgres_container
     environment:
-      - POSTGRES_DB=my_database
-      - POSTGRES_USER=my_user
-      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=finance_manager
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=posgtres
     ports:
       - "5432:5432"
     volumes:
