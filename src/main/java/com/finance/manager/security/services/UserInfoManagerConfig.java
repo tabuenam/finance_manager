@@ -1,4 +1,4 @@
-package com.finance.manager.security;
+package com.finance.manager.security.services;
 
 import com.finance.manager.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

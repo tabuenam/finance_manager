@@ -1,4 +1,4 @@
-package com.finance.manager.security;
+package com.finance.manager.security.util;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

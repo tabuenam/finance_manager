@@ -1,7 +1,7 @@
 package com.finance.manager.config;
 
-import com.finance.manager.security.RSAKeyRecord;
-import com.finance.manager.security.UserInfoManagerConfig;
+import com.finance.manager.security.services.UserInfoManagerConfig;
+import com.finance.manager.security.util.RSAKeyRecord;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

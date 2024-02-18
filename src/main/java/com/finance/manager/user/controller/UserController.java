@@ -1,8 +1,7 @@
 package com.finance.manager.user.controller;
 
-import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.model.UserModel;
-import com.finance.manager.user.services.impl.UserServiceImpl;
+import com.finance.manager.user.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-    @PostMapping(value ="/register")
+    @PostMapping(value = "/register")
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody UserModel userModel
     ) {

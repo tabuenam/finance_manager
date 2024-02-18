@@ -1,4 +1,4 @@
-package com.finance.manager.security;
+package com.finance.manager.security.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class JwtTokenGenerator {
+public class JwtTokenGenerationService {
     private final JwtEncoder jwtEncoder;
 
     public String generateAccessToken(final Authentication authentication) {
