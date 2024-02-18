@@ -54,5 +54,4 @@ public class JwtTokenGenerator {
 
         return String.join(" ", permissions);
     }
-
 }

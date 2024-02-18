@@ -1,6 +1,7 @@
 package com.finance.manager.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthenticationService authenticationService;
 
-    @PostMapping(value = "/authenticate")
-    public AuthResponseDto authenticate(Authentication authentication) {
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> authenticate(Authentication authentication) {
         System.out.println("Hello endpoint authenticate");
-        return authenticationService.getTokenAfterAuthentication(authentication);
+        return ResponseEntity.ok(authenticationService.getTokenAfterAuthentication(authentication));
     }
 }
