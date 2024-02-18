@@ -1,8 +1,11 @@
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash CHAR(60) NOT NULL, -- BCrypt hashed passwords are 60 characters
+    user_role CHAR(10) NOT NULL,
     enabled BOOLEAN NOT NULL DEFAULT true,
     account_non_expired BOOLEAN NOT NULL DEFAULT true,
     account_non_locked BOOLEAN NOT NULL DEFAULT true,

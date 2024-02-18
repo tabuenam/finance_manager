@@ -50,6 +50,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @Column(name= "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
