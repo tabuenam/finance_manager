@@ -40,7 +40,7 @@ public class JwtTokenGenerationService {
 
     public String generateRefreshToken(final Authentication authentication) {
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("atquil")
+                .issuer("self")
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(15 , ChronoUnit.DAYS))
                 .subject(authentication.getName())
