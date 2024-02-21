@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 import static com.finance.manager.user.roles.Role.*;
 import static java.util.Objects.isNull;
