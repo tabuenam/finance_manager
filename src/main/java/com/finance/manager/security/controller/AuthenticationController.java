@@ -1,6 +1,7 @@
 package com.finance.manager.security.controller;
 
 import com.finance.manager.security.services.AuthenticationService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,8 +16,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(Authentication authentication) {
+    public ResponseEntity<?> authenticate(Authentication authentication, HttpServletResponse response) {
         System.out.println("Hello endpoint authenticate");
-        return ResponseEntity.ok(authenticationService.getTokenAfterAuthentication(authentication));
+        return ResponseEntity.ok(authenticationService.getTokenAfterAuthentication(authentication, response));
     }
 }
