@@ -18,6 +18,5 @@ public record UserModel(
         @NotNull
         @Size(min = 7, max = 60)
         String password,
-        Role role,
-        Set<RefreshTokenEntity> refreshTokens) {
+        Role role) {
 }

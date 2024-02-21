@@ -1,5 +1,7 @@
 package com.finance.manager.config;
 
+import com.finance.manager.security.services.JwtTokenAccessFilter;
+import com.finance.manager.security.services.JwtTokenUtils;
 import com.finance.manager.security.services.UserInfoManagerConfig;
 import com.finance.manager.security.util.RSAKeyRecord;
 import com.nimbusds.jose.jwk.JWK;
@@ -25,6 +27,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
     private final UserInfoManagerConfig userInfoManagerConfig;
     private final RSAKeyRecord rsaKeyRecord;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Order(1)
     @Bean
@@ -48,6 +52,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .userDetailsService(userInfoManagerConfig)
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                //why now as spring bean try it; JwtTokenAccessFilter is not a spring bean
+                .addFilterBefore(new JwtTokenAccessFilter(jwtTokenUtils, rsaKeyRecord), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> {
                     ex.authenticationEntryPoint((request, response, authException) ->
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));

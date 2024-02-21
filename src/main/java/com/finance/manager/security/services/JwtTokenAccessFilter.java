@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import static java.util.Objects.isNull;
 
-@Component
 @RequiredArgsConstructor
 public class JwtTokenAccessFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
