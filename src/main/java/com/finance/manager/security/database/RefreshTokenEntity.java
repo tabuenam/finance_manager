@@ -27,7 +27,4 @@ public class RefreshTokenEntity {
     @ManyToOne
     @JoinColumn(name= "user_id", referencedColumnName = "id")
     private UserEntity user;
-
-
-
 }
