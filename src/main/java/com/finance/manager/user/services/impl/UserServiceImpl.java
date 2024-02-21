@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(userEntity);
     }
 
+
     private Role determineUserRole(final UserModel userModel) {
         return isNull(userModel.role()) ? USER : ADMIN;
     }
