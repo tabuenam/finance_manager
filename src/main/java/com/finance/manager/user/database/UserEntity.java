@@ -1,5 +1,6 @@
 package com.finance.manager.user.database;
 
+import com.finance.manager.security.database.RefreshTokenEntity;
 import com.finance.manager.user.roles.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -49,6 +52,9 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<RefreshTokenEntity> refreshTokenEntities = new LinkedHashSet<>();
 
     @Column(name= "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
