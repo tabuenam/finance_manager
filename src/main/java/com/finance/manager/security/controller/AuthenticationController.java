@@ -24,9 +24,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.getTokenAfterAuthentication(authentication, response));
     }
 
-    @PostMapping ("/refresh-token")
     @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
-    public ResponseEntity<?> getAccessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> getAccessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         return ResponseEntity.ok(authenticationService.getAccessTokenUsingRefreshToken(authorizationHeader));
     }
 }

@@ -97,13 +97,12 @@ public class AuthenticationService {
         );
     }
 
-    private Cookie createRefreshTokenCookie(final HttpServletResponse response, final String refreshToken) {
+    private void createRefreshTokenCookie(final HttpServletResponse response, final String refreshToken) {
         Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setMaxAge(15 * 24 * 60 * 60); // in seconds
         response.addCookie(refreshTokenCookie);
-        return refreshTokenCookie;
     }
 
     private void saveUserRefreshToken(final UserEntity userEntity, final String refreshToken) {
