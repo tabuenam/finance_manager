@@ -43,17 +43,16 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserAccountDetailModel getUserAccountDetail(final UserModel userModel) {
-        return userRepository.findByEmail(userModel.email())
-                .map(userEntity -> {
-                            return new UserAccountDetailModel(
-                                    userEntity.getUsername(),
-                                    userEntity.getEmail(),
-                                    userEntity.getRole(),
-                                    userEntity.getCreatedAt(),
-                                    userEntity.getUpdatedAt()
-                            );
-                        }
-                ).orElseThrow(() -> new RuntimeException("User does not exist"));
+        UserEntity userEntity = userRepository.findByEmail(userModel.email())
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+
+        return new UserAccountDetailModel(
+                userEntity.getUsername(),
+                userEntity.getEmail(),
+                userEntity.getRole(),
+                userEntity.getCreatedAt(),
+                userEntity.getUpdatedAt()
+        );
     }
 
     public UserAccountDetailModel updatePassword(final UpdatePasswordRequest updatePasswordRequest) {
@@ -78,10 +77,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteUserAccount(final String email) {
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User does not exist"));
+        userRepository.findByEmail(email)
+                .ifPresentOrElse(userRepository::delete,
+                        () -> {
+                            throw new RuntimeException("User does not exist");
+                        }
+                );
 
-        userRepository.delete(userEntity);
     }
 
     private Role determineUserRole(final UserModel userModel) {
