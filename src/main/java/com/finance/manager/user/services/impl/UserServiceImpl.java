@@ -77,14 +77,12 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    public void deleteUserAccount(final String email){
+    public void deleteUserAccount(final String email) {
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
 
         userRepository.delete(userEntity);
-        System.out.println("User has been deleted");
     }
-
 
     private Role determineUserRole(final UserModel userModel) {
         return isNull(userModel.role()) ? USER : ADMIN;
