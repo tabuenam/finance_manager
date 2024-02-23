@@ -1,10 +1,7 @@
 package com.finance.manager.config;
 
 import com.finance.manager.security.repository.RefreshTokenRepository;
-import com.finance.manager.security.services.JwtRefreshTokenFilter;
-import com.finance.manager.security.services.JwtTokenAccessFilter;
-import com.finance.manager.security.services.JwtTokenUtils;
-import com.finance.manager.security.services.UserInfoManagerConfig;
+import com.finance.manager.security.services.*;
 import com.finance.manager.security.util.RSAKeyRecord;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -21,6 +18,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -46,6 +44,7 @@ public class SecurityConfig {
     private final RSAKeyRecord rsaKeyRecord;
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final LogoutHandlerService logoutHandlerService;
 
     @Order(1)
     @Bean
@@ -91,8 +90,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .securityMatcher(new AntPathRequestMatcher("/refresh-token/**"))
                 .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher(new AntPathRequestMatcher("/refresh-token/**"))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .addFilterBefore(new JwtRefreshTokenFilter(rsaKeyRecord, jwtTokenUtils, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
@@ -103,6 +102,28 @@ public class SecurityConfig {
                     ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
                 })
                 .httpBasic(withDefaults())
+                .build();
+    }
+
+    @Order(4)
+    @Bean
+    public SecurityFilterChain logoutSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher(new AntPathRequestMatcher("/logout/**"))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .addFilterBefore(new JwtTokenAccessFilter(jwtTokenUtils, rsaKeyRecord), UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .addLogoutHandler(logoutHandlerService)
+                        .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
+                )
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
+                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
+                })
                 .build();
     }
 
