@@ -28,8 +28,8 @@ import static java.util.Objects.isNull;
 
 @RequiredArgsConstructor
 public class JwtTokenAccessFilter extends OncePerRequestFilter {
-    private final JwtTokenUtils jwtTokenUtils;
     private final RSAKeyRecord rsaKeyRecord;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -40,7 +40,7 @@ public class JwtTokenAccessFilter extends OncePerRequestFilter {
 
             JwtDecoder jwtDecoder =  NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
 
-            if(!authHeader.startsWith(TokenType.BEARER.name())){
+            if(!authHeader.startsWith(TokenType.Bearer.name())){
                 filterChain.doFilter(request,response);
                 return;
             }

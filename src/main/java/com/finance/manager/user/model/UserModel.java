@@ -14,6 +14,7 @@ public record UserModel(
         String userName,
         @Email
         @NotNull
+        @Email
         String email,
         @NotNull
         @Size(min = 7, max = 60)

@@ -40,7 +40,7 @@ public class AuthenticationService {
             createRefreshTokenCookie(response, refreshToken);
 
             String accessToken = jwtTokenGenerationService.generateAccessToken(authentication);
-            return new AuthResponseModel(accessToken, 15 * 60, userEntity.getUsername(), TokenType.BEARER);
+            return new AuthResponseModel(accessToken, 15 * 60, userEntity.getUsername(), TokenType.Bearer);
         } catch (Exception e) {
             System.out.println("[AuthService:userSignInAuth]Exception while authenticating the user due to :" + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please Try Again");
@@ -48,7 +48,7 @@ public class AuthenticationService {
     }
 
     public Object getAccessTokenUsingRefreshToken(final String authorizationHeader) {
-        if (!authorizationHeader.startsWith(TokenType.BEARER.name())) {
+        if (!authorizationHeader.startsWith(TokenType.Bearer.name())) {
             return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please verify your token type");
         }
         final String refreshToken = authorizationHeader.substring(7);
@@ -61,7 +61,7 @@ public class AuthenticationService {
         Authentication authentication = createAuthenticationObject(userEntity);
         String accessToken = jwtTokenGenerationService.generateAccessToken(authentication);
 
-        return new AuthResponseModel(accessToken, 5 * 60, userEntity.getUsername(), TokenType.BEARER);
+        return new AuthResponseModel(accessToken, 5 * 60, userEntity.getUsername(), TokenType.Bearer);
     }
 
     public AuthResponseModel registerUser(final UserModel userModel,
@@ -78,7 +78,7 @@ public class AuthenticationService {
             saveUserRefreshToken(userEntity,refreshToken);
 
             createRefreshTokenCookie(httpServletResponse,refreshToken);
-            return new AuthResponseModel(accessToken, 15 * 60, savedUserDetails.getUsername(), TokenType.BEARER);
+            return new AuthResponseModel(accessToken, 15 * 60, savedUserDetails.getUsername(), TokenType.Bearer);
 
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
