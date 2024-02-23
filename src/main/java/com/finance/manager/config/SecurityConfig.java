@@ -63,28 +63,6 @@ public class SecurityConfig {
                 .build();
     }
 
-//    @Order(2)
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        return httpSecurity
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorizationManager ->
-//                        authorizationManager.requestMatchers("/api/v1/users/register").permitAll()
-//                                .anyRequest()
-//                                .authenticated()
-//                )
-//                .userDetailsService(userInfoManagerConfig)
-//                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
-//                .exceptionHandling(ex -> {
-//                    System.out.println("[SecurityConfig:apiSecurityFilterChain] Exception due to :{}" + ex);
-//                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
-//                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
-//                })
-//                .httpBasic(withDefaults())
-//                .build();
-//    }
-
     @Order(2)
     @Bean
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {

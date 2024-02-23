@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 import static com.finance.manager.user.roles.Role.*;
 import static java.util.Objects.isNull;
@@ -23,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void saveUser(final UserModel userModel) {
+    public UserEntity saveUser(final UserModel userModel) {
         UserEntity userEntity = UserEntity.builder()
                 .email(userModel.email())
                 .username(userModel.userName())
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        userRepository.saveAndFlush(userEntity);
+        return userRepository.saveAndFlush(userEntity);
     }
 
 
