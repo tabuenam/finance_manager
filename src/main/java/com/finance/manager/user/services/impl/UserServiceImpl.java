@@ -1,6 +1,7 @@
 package com.finance.manager.user.services.impl;
 
 import com.finance.manager.user.database.UserEntity;
+import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.repository.UserRepository;
 import com.finance.manager.user.roles.Role;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static com.finance.manager.user.roles.Role.*;
+import static com.finance.manager.user.roles.Role.ADMIN;
+import static com.finance.manager.user.roles.Role.USER;
 import static java.util.Objects.isNull;
 
 @Service
@@ -37,6 +39,20 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.saveAndFlush(userEntity);
+    }
+
+    public UserAccountDetailModel getUserAccountDetail(final UserModel userModel) {
+        return userRepository.findByEmail(userModel.email())
+                .map(userEntity -> {
+                            return new UserAccountDetailModel(
+                                    userEntity.getUsername(),
+                                    userEntity.getEmail(),
+                                    userEntity.getRole(),
+                                    userEntity.getCreatedAt(),
+                                    userEntity.getUpdatedAt()
+                            );
+                        }
+                ).orElseThrow(() -> new RuntimeException("User does not exist"));
     }
 
 
