@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
 
         if (!updatePasswordRequest.currentPassword().equals(updatePasswordRequest.confirmationPassword())) {
-            throw new RuntimeException("Password do not match");
+            throw new RuntimeException("Passwords do not match");
         }
 
         userEntity.setPasswordHash(passwordEncoder.encode(updatePasswordRequest.newPassword()));
