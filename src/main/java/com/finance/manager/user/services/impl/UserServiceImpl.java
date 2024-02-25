@@ -1,5 +1,6 @@
 package com.finance.manager.user.services.impl;
 
+import com.finance.manager.email.service.MailService;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.model.UpdatePasswordRequest;
 import com.finance.manager.user.model.UserAccountDetailModel;
@@ -23,6 +24,7 @@ import static java.util.Objects.isNull;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     @Transactional
     public UserEntity saveUser(final UserModel userModel) {
@@ -38,6 +40,11 @@ public class UserServiceImpl implements UserService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+
+        mailService.sendMail(
+                userModel.email(),
+                "UserAccount at finance-manager",
+                "Hello Juan, I would like to welcome you to your financial future.");
 
         return userRepository.saveAndFlush(userEntity);
     }
