@@ -26,7 +26,7 @@ public class UserServiceImplTestData {
         );
     }
 
-    static protected UserEntity buildUserEntity() {
+    public static UserEntity buildUserEntity() {
         return UserEntity.builder()
                 .email("email@example.com")
                 .username("exampleUser")
