@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveAndFlush(userEntity);
     }
 
-    public UserAccountDetailModel getUserAccountDetail(final UserModel userModel) {
-        UserEntity userEntity = userRepository.findByEmail(userModel.email())
+    public UserAccountDetailModel getUserAccountDetail(final String mail) {
+        UserEntity userEntity = userRepository.findByEmail(mail)
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
 
         return new UserAccountDetailModel(

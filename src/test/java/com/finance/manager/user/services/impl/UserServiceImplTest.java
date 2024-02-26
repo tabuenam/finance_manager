@@ -63,7 +63,7 @@ class UserServiceImplTest {
         //Act
 
         UserAccountDetailModel userAccountDetail =
-                underTest.getUserAccountDetail(userModel);
+                underTest.getUserAccountDetail("user@email.com");
         //Assert
         assertEquals(userEntity.getUsername(), userAccountDetail.userName());
         assertEquals(userEntity.getEmail(), userAccountDetail.email());
@@ -81,7 +81,7 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
         //Act
         assertThrows(RuntimeException.class, () ->
-                underTest.getUserAccountDetail(userModel));
+                underTest.getUserAccountDetail("user@email.com"));
         //Assert
         verify(userRepository, times(1))
                 .findByEmail(anyString());

@@ -7,8 +7,7 @@ import com.finance.manager.user.model.UserModel;
 
 public interface UserService {
     UserEntity saveUser(UserModel userModel);
-    UserAccountDetailModel getUserAccountDetail(UserModel userModel);
+    UserAccountDetailModel getUserAccountDetail(String mail);
     UserAccountDetailModel updatePassword(UpdatePasswordRequest updatePasswordRequest);
     void deleteUserAccount(String email);
-
 }
