@@ -30,6 +30,4 @@ public class UserController {
         userService.deleteUserAccount(mail);
         return ResponseEntity.noContent().build();
     }
-
-
 }
