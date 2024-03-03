@@ -1,6 +1,7 @@
 package com.finance.manager.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finance.manager.user.model.UpdatePasswordRequest;
 import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.roles.Role;
 import com.finance.manager.user.services.impl.UserServiceImpl;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -20,6 +22,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,11 +46,12 @@ class UserControllerTest {
         var userAccountDetailModel =
                 getUserAccountDetailModel();
 
-        when(userService.getUserAccountDetail(mail))
+        when(userService.getUserAccountDetail(anyString()))
                 .thenReturn(userAccountDetailModel);
         //Act
         ResultActions resultActions =
                 mockMvc.perform(get("/api/v1/users/mail/{mail}", mail)
+                        .with(SecurityMockMvcRequestPostProcessors.jwt())
                         .characterEncoding("UTF-8")
                 );
         //Assert
@@ -59,6 +63,27 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.userName", is(userAccountDetailModel.userName())));
     }
 
+    @Test
+    void itShouldSuccessfullyUpdatePasswordOfUser() throws Exception {
+        //Arrange
+        UpdatePasswordRequest updatePasswordRequest
+                = getUpdatePasswordRequest();
+        UserAccountDetailModel userAccountDetailModel
+                = getUserAccountDetailModel();
+        when(userService.updatePassword(any(UpdatePasswordRequest.class)))
+                .thenReturn(userAccountDetailModel);
+        //Act
+        ResultActions resultActions =
+                mockMvc.perform(post("/api/v1/users/update-password")
+                        .characterEncoding("UTF-8")
+                        .with(SecurityMockMvcRequestPostProcessors.jwt())
+                        .content(objectMapper.writeValueAsString(updatePasswordRequest))
+                );
+
+        //Assert
+    }
+
+
     private UserAccountDetailModel getUserAccountDetailModel() {
         return new UserAccountDetailModel(
                 "userName",
@@ -66,6 +91,15 @@ class UserControllerTest {
                 Role.USER,
                 LocalDateTime.now(),
                 LocalDateTime.now()
+        );
+    }
+
+    private UpdatePasswordRequest getUpdatePasswordRequest() {
+        return new UpdatePasswordRequest(
+                "user@mail.com",
+                "strongPassword",
+                "strongPassword",
+                "$trong%!P@sswOrd_1994?"
         );
     }
 }
