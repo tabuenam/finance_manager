@@ -1,9 +1,6 @@
 package com.finance.manager.security.services;
 
-import com.finance.manager.user.database.UserEntity;
-import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.repository.UserRepository;
-import com.finance.manager.user.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +8,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 

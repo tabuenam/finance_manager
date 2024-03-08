@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finance.manager.user.model.UpdatePasswordRequest;
 import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.roles.Role;
-import com.finance.manager.user.services.impl.UserServiceImpl;
+import com.finance.manager.user.services.impl.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,14 +27,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserControllerTest.class)
+@WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     @MockBean
-    private UserServiceImpl userService;
+    private UserService userService;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
     private ObjectMapper objectMapper;
 
 
@@ -43,10 +44,8 @@ class UserControllerTest {
         //Arrange
         String mail = "user@mail.com";
 
-        var userAccountDetailModel =
-                getUserAccountDetailModel();
-
-        when(userService.getUserAccountDetail(anyString()))
+        var userAccountDetailModel = getUserAccountDetailModel();
+        when(userService.getUserAccountDetail(any()))
                 .thenReturn(userAccountDetailModel);
         //Act
         ResultActions resultActions =
@@ -55,12 +54,13 @@ class UserControllerTest {
                         .characterEncoding("UTF-8")
                 );
         //Assert
-        verify(userService, times(1))
-                .getUserAccountDetail(anyString());
-
         resultActions.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userName", is(userAccountDetailModel.userName())));
+                .andExpect(jsonPath("$.userName", is(userAccountDetailModel.userName())))
+                .andExpect(jsonPath("$.email", is(userAccountDetailModel.email())));
+
+        verify(userService, times(1))
+                .getUserAccountDetail(any());
     }
 
     @Test
@@ -70,17 +70,21 @@ class UserControllerTest {
                 = getUpdatePasswordRequest();
         UserAccountDetailModel userAccountDetailModel
                 = getUserAccountDetailModel();
-        when(userService.updatePassword(any(UpdatePasswordRequest.class)))
+
+        when(userService.updatePassword(any()))
                 .thenReturn(userAccountDetailModel);
         //Act
         ResultActions resultActions =
                 mockMvc.perform(post("/api/v1/users/update-password")
                         .characterEncoding("UTF-8")
-                        .with(SecurityMockMvcRequestPostProcessors.jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatePasswordRequest))
                 );
-
         //Assert
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userName", is(userAccountDetailModel.userName())))
+                .andExpect(jsonPath("$.email", is(userAccountDetailModel.email())));
     }
 
 

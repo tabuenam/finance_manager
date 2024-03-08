@@ -7,7 +7,6 @@ import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.repository.UserRepository;
 import com.finance.manager.user.roles.Role;
-import com.finance.manager.user.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +20,7 @@ import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;

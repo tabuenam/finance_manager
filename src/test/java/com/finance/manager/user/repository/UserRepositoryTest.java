@@ -12,7 +12,6 @@ import java.util.Optional;
 import static com.finance.manager.user.services.impl.UserServiceImplTestData.buildUserEntity;
 
 @DataJpaTest
-@Disabled
 class UserRepositoryTest {
     @Autowired
     private UserRepository underTest;

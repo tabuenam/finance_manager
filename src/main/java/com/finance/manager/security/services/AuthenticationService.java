@@ -7,7 +7,7 @@ import com.finance.manager.security.util.TokenType;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.repository.UserRepository;
-import com.finance.manager.user.services.UserService;
+import com.finance.manager.user.services.impl.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

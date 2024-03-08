@@ -22,13 +22,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
-    private UserServiceImpl underTest;
+    private UserService underTest;
 
     private UserEntity userEntity;
     private UserModel userModel;

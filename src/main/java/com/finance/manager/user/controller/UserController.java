@@ -1,7 +1,8 @@
 package com.finance.manager.user.controller;
 
 import com.finance.manager.user.model.UpdatePasswordRequest;
-import com.finance.manager.user.services.UserService;
+import com.finance.manager.user.model.UserAccountDetailModel;
+import com.finance.manager.user.services.impl.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.websocket.server.PathParam;
