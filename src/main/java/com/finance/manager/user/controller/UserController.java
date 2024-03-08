@@ -1,18 +1,19 @@
 package com.finance.manager.user.controller;
 
 import com.finance.manager.user.model.UpdatePasswordRequest;
-import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.services.impl.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
     private final UserService userService;
 
