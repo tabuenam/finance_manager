@@ -77,7 +77,7 @@ class UserControllerTest {
                 .thenReturn(userAccountDetailModel);
         //Act
         ResultActions resultActions =
-                mockMvc.perform(post("/api/v1/users/update-password")
+                mockMvc.perform(patch("/api/v1/users")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatePasswordRequest))

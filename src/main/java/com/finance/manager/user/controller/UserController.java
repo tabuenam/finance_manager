@@ -22,7 +22,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserAccountDetail(mail));
     }
 
-    @PostMapping(value = "/update-password")
+    @PatchMapping
     public ResponseEntity<?> updateUserPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         return ResponseEntity.ok(userService.updatePassword(updatePasswordRequest));
     }
