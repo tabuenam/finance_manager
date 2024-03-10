@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS transactions;
 CREATE TABLE transactions(
     transaction_id SERIAL PRIMARY KEY
     user_id INTEGER NOT NULL,
-    transaction_type VARCHAR(30) NOT NULL,
+    transaction_type VARCHAR(100) NOT NULL,
     category_id INTEGER NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     transaction_date DATE NOT NULL,
