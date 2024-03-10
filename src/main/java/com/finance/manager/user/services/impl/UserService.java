@@ -2,7 +2,7 @@ package com.finance.manager.user.services.impl;
 
 import com.finance.manager.email.service.MailService;
 import com.finance.manager.user.database.UserEntity;
-import com.finance.manager.user.model.UpdatePasswordRequest;
+import com.finance.manager.user.model.UpdatePasswordRequestModel;
 import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.repository.UserRepository;
@@ -61,15 +61,15 @@ public class UserService {
         );
     }
 
-    public UserAccountDetailModel updatePassword(final UpdatePasswordRequest updatePasswordRequest) {
-        UserEntity userEntity = userRepository.findByEmail(updatePasswordRequest.email())
+    public UserAccountDetailModel updatePassword(final UpdatePasswordRequestModel updatePasswordRequestModel) {
+        UserEntity userEntity = userRepository.findByEmail(updatePasswordRequestModel.email())
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
 
-        if (!updatePasswordRequest.currentPassword().equals(updatePasswordRequest.confirmationPassword())) {
+        if (!updatePasswordRequestModel.currentPassword().equals(updatePasswordRequestModel.confirmationPassword())) {
             throw new RuntimeException("Passwords do not match");
         }
 
-        userEntity.setPasswordHash(passwordEncoder.encode(updatePasswordRequest.newPassword()));
+        userEntity.setPasswordHash(passwordEncoder.encode(updatePasswordRequestModel.newPassword()));
         userEntity.setUpdatedAt(LocalDateTime.now());
         UserEntity updatedUserEntity = userRepository.saveAndFlush(userEntity);
 

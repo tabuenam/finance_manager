@@ -1,7 +1,7 @@
 package com.finance.manager.user.services.impl;
 
 import com.finance.manager.user.database.UserEntity;
-import com.finance.manager.user.model.UpdatePasswordRequest;
+import com.finance.manager.user.model.UpdatePasswordRequestModel;
 import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.repository.UserRepository;
@@ -32,13 +32,13 @@ class UserServiceTest {
 
     private UserEntity userEntity;
     private UserModel userModel;
-    private UpdatePasswordRequest updatePasswordRequest;
+    private UpdatePasswordRequestModel updatePasswordRequestModel;
 
     @BeforeEach
     void setUp() {
         userEntity = buildUserEntity();
         userModel = buildUserModel();
-        updatePasswordRequest = buildUpdatePasswordRequest();
+        updatePasswordRequestModel = buildUpdatePasswordRequest();
     }
 
     @Test
@@ -102,7 +102,7 @@ class UserServiceTest {
                 .thenReturn(userEntity);
         //Act
         UserAccountDetailModel userAccountDetailModel =
-                underTest.updatePassword(updatePasswordRequest);
+                underTest.updatePassword(updatePasswordRequestModel);
         //Assert
         assertEquals(userEntity.getUsername(), userAccountDetailModel.userName());
         assertEquals(userEntity.getEmail(), userAccountDetailModel.email());
@@ -124,7 +124,7 @@ class UserServiceTest {
                 .thenReturn(Optional.empty());
         //Act
         assertThrows(RuntimeException.class, () ->
-                underTest.updatePassword(updatePasswordRequest));
+                underTest.updatePassword(updatePasswordRequestModel));
         //Assert
         verify(userRepository, times(1))
                 .findByEmail(anyString());
@@ -133,7 +133,7 @@ class UserServiceTest {
     @Test
     void itShouldThrowAnExceptionUserEmailNotFoundInDbWhileUpdatingPasswordPasswordDoNotMatch() {
         //Arrange
-        UpdatePasswordRequest invalidPasswordUpdateRequest = new UpdatePasswordRequest(
+        UpdatePasswordRequestModel invalidPasswordUpdateRequest = new UpdatePasswordRequestModel(
                 "email@example.com",
                 "currentPassword_!",
                 "DONOTMATCH",

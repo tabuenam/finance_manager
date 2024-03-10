@@ -1,6 +1,6 @@
 package com.finance.manager.user.controller;
 
-import com.finance.manager.user.model.UpdatePasswordRequest;
+import com.finance.manager.user.model.UpdatePasswordRequestModel;
 import com.finance.manager.user.services.impl.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -23,8 +23,8 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateUserPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        return ResponseEntity.ok(userService.updatePassword(updatePasswordRequest));
+    public ResponseEntity<?> updateUserPassword(@Valid @RequestBody UpdatePasswordRequestModel updatePasswordRequestModel) {
+        return ResponseEntity.ok(userService.updatePassword(updatePasswordRequestModel));
     }
 
     @DeleteMapping(value = "/mail/{mail}")

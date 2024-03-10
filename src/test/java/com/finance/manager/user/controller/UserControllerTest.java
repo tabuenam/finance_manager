@@ -1,7 +1,7 @@
 package com.finance.manager.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finance.manager.user.model.UpdatePasswordRequest;
+import com.finance.manager.user.model.UpdatePasswordRequestModel;
 import com.finance.manager.user.model.UserAccountDetailModel;
 import com.finance.manager.user.roles.Role;
 import com.finance.manager.user.services.impl.UserService;
@@ -70,7 +70,7 @@ class UserControllerTest {
     @Test
     void itShouldSuccessfullyUpdatePasswordOfUser() throws Exception {
         //Arrange
-        UpdatePasswordRequest updatePasswordRequest
+        UpdatePasswordRequestModel updatePasswordRequestModel
                 = getUpdatePasswordRequest();
 
         when(userService.updatePassword(any()))
@@ -80,7 +80,7 @@ class UserControllerTest {
                 mockMvc.perform(patch("/api/v1/users")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatePasswordRequest))
+                        .content(objectMapper.writeValueAsString(updatePasswordRequestModel))
                 );
         //Assert
         resultActions.andDo(print())
@@ -116,8 +116,8 @@ class UserControllerTest {
         );
     }
 
-    private UpdatePasswordRequest getUpdatePasswordRequest() {
-        return new UpdatePasswordRequest(
+    private UpdatePasswordRequestModel getUpdatePasswordRequest() {
+        return new UpdatePasswordRequestModel(
                 "user@mail.com",
                 "strongPassword",
                 "strongPassword",

@@ -1,7 +1,7 @@
 package com.finance.manager.user.services.impl;
 
 import com.finance.manager.user.database.UserEntity;
-import com.finance.manager.user.model.UpdatePasswordRequest;
+import com.finance.manager.user.model.UpdatePasswordRequestModel;
 import com.finance.manager.user.model.UserModel;
 import com.finance.manager.user.roles.Role;
 
@@ -17,8 +17,8 @@ public class UserServiceImplTestData {
         );
     }
 
-    static protected UpdatePasswordRequest buildUpdatePasswordRequest() {
-        return new UpdatePasswordRequest(
+    static protected UpdatePasswordRequestModel buildUpdatePasswordRequest() {
+        return new UpdatePasswordRequestModel(
                 "email@example.com",
                 "currentPassword_!",
                 "currentPassword_!",
