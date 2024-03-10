@@ -12,7 +12,6 @@ public record UpdatePasswordRequestModel(
                                 @NotNull
                                 String confirmationPassword,
                                 @NotNull
-                                @NotNull
                                 String newPassword
 )
 { }

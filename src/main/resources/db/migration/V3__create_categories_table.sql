@@ -7,8 +7,8 @@ CREATE TABLE categories (
     description TEXT,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_user
+    CONSTRAINT fk_category_user
         FOREIGN KEY (user_id)
-        REFERENCES users(user_id)
+        REFERENCES users(id)
         ON DELETE CASCADE
 );
