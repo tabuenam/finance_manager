@@ -12,7 +12,7 @@ import java.util.List;
 public class TransactionService {
     private final TransactionRepository repository;
 
-    void addIncome(final List<TransactionModel> incomes){
+    void addIncome(final List<TransactionModel> incomes) {
 
     }
 
