@@ -3,10 +3,17 @@ package com.finance.manager.transaction.database;
 import com.finance.manager.transaction.util.TransactionType;
 import com.finance.manager.transaction.util.TransactionTypeConverter;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "transactions")
 public class Transaction {
