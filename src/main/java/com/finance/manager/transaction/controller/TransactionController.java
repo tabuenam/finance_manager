@@ -21,6 +21,7 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
 
+    @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping
     public ResponseEntity<?> updateUserPassword(
             @Valid @RequestBody List<TransactionModel> transactionModels) {
