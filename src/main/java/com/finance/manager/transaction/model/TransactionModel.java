@@ -10,7 +10,6 @@ public record TransactionModel(
         float amount,
         @NotNull
         TransactionType transactionType,
-        LocalDate transactionDate,
         @NotNull
         Long categoryId
 ) {

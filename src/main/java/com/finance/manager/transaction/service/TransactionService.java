@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,14 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserService userService;
 
-    void addTransaction(final List<TransactionModel> transactionModels) {
+    public void addTransaction(final List<TransactionModel> transactionModels) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserEntity user = userService.findByUserMail(authentication.getName());
 
         List<Transaction> transactions = new ArrayList<>();
         for (var transaction : transactionModels) {
             Transaction newTransaction = Transaction.builder()
-                    .transactionDate(transaction.transactionDate())
+                    .transactionDate(LocalDate.now())
                     .transactionType(transaction.transactionType())
                     .categoryId(transaction.categoryId())
                     .userId(user.getId())

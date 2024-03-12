@@ -117,6 +117,25 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Order(5)
+    @Bean
+    public SecurityFilterChain transactionsSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/api/v1/transactions/**").authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .exceptionHandling(ex -> {
+                    System.out.println("[SecurityConfig:refreshTokenSecurityFilterChain] Exception due to :{} " + ex);
+                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
+                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
+                })
+                .httpBasic(withDefaults())
+                .build();
+    }
+
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
