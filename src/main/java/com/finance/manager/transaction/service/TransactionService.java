@@ -40,5 +40,4 @@ public class TransactionService {
         }
         transactionRepository.saveAll(transactions);
     }
-
 }

@@ -26,7 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtRefreshTokenFilter extends OncePerRequestFilter {
 
-    private  final RSAKeyRecord rsaKeyRecord;
+    private final RSAKeyRecord rsaKeyRecord;
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshTokenRepository refreshTokenRepo;
 
@@ -72,8 +72,8 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        }catch (JwtValidationException jwtValidationException){
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,jwtValidationException.getMessage());
+        } catch (JwtValidationException jwtValidationException) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, jwtValidationException.getMessage());
         }
     }
 }
