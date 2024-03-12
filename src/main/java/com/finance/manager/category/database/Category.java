@@ -23,7 +23,7 @@ public class Category {
     @Column(name = "name", nullable = false, unique = true)
     String categoryName;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "description", unique = true)
     String description;
 
     @Column(name = "created_at")
