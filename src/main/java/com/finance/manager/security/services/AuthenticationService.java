@@ -30,6 +30,8 @@ public class AuthenticationService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
 
+    private static final int TOKEN_EXPIRATION_TIME_SECONDS = 6000;
+
     public AuthResponseModel getTokenAfterAuthentication(final Authentication authentication, final HttpServletResponse response) {
         try {
             var userEntity = userRepository.findByEmail(authentication.getName())
@@ -43,7 +45,7 @@ public class AuthenticationService {
             createRefreshTokenCookie(response, refreshToken);
 
             String accessToken = jwtTokenGenerationService.generateAccessToken(authentication);
-            return new AuthResponseModel(accessToken, 1 * 60, userEntity.getUsername(), TokenType.Bearer);
+            return new AuthResponseModel(accessToken, TOKEN_EXPIRATION_TIME_SECONDS, userEntity.getUsername(), TokenType.Bearer);
         } catch (Exception e) {
             System.out.println("[AuthService:userSignInAuth]Exception while authenticating the user due to :" + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please Try Again");
@@ -64,7 +66,12 @@ public class AuthenticationService {
         Authentication authentication = createAuthenticationObject(userEntity);
         String accessToken = jwtTokenGenerationService.generateAccessToken(authentication);
 
-        return new AuthResponseModel(accessToken, 1 * 60, userEntity.getUsername(), TokenType.Bearer);
+        return new AuthResponseModel(
+                accessToken,
+                TOKEN_EXPIRATION_TIME_SECONDS,
+                userEntity.getUsername(),
+                TokenType.Bearer
+        );
     }
 
     public AuthResponseModel registerUser(final UserModel userModel,
@@ -86,7 +93,12 @@ public class AuthenticationService {
             saveUserRefreshToken(userEntity, refreshToken);
             createRefreshTokenCookie(httpServletResponse, refreshToken);
 
-            return new AuthResponseModel(accessToken, 1 * 60, savedUserDetails.getUsername(), TokenType.Bearer);
+            return new AuthResponseModel(
+                    accessToken,
+                    TOKEN_EXPIRATION_TIME_SECONDS,
+                    savedUserDetails.getUsername(),
+                    TokenType.Bearer
+            );
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
