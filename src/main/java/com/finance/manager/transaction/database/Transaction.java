@@ -29,6 +29,8 @@ public class Transaction {
     TransactionType transactionType;
     @Column(name = "transaction_date", nullable = false)
     LocalDate transactionDate;
+    @Column(name = "amount", nullable = false)
+    Float amount;
     @Column(name = "notes")
     String notes;
     @Column(name = "created_at", nullable = false)

@@ -19,7 +19,6 @@ public record UserModel(
         String email,
         @NotNull
         @Size(min = 7, max = 60)
-        @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,}$")
         String password,
         Role role) {
 }

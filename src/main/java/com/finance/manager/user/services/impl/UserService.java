@@ -49,8 +49,7 @@ public class UserService {
     }
 
     public UserAccountDetailModel getUserAccountDetail(final String mail) {
-        UserEntity userEntity = userRepository.findByEmail(mail)
-                .orElseThrow(() -> new RuntimeException("User does not exist"));
+        UserEntity userEntity = findByUserMail(mail);
 
         return new UserAccountDetailModel(
                 userEntity.getUsername(),
@@ -61,9 +60,13 @@ public class UserService {
         );
     }
 
-    public UserAccountDetailModel updatePassword(final UpdatePasswordRequestModel updatePasswordRequestModel) {
-        UserEntity userEntity = userRepository.findByEmail(updatePasswordRequestModel.email())
+    public UserEntity findByUserMail(final String mail) {
+        return userRepository.findByEmail(mail)
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
+
+    public UserAccountDetailModel updatePassword(final UpdatePasswordRequestModel updatePasswordRequestModel) {
+        UserEntity userEntity = findByUserMail(updatePasswordRequestModel.email());
 
         if (!updatePasswordRequestModel.currentPassword().equals(updatePasswordRequestModel.confirmationPassword())) {
             throw new RuntimeException("Passwords do not match");
