@@ -123,7 +123,10 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/v1/transactions/**").authenticated()
+                        auth.requestMatchers(
+                                "/api/v1/transactions/**",
+                                        "/api/v1/categories/**")
+                                .authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
