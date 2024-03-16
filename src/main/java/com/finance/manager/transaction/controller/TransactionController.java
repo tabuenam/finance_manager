@@ -23,7 +23,7 @@ public class TransactionController {
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping
-    public ResponseEntity<?> updateUserPassword(
+    public ResponseEntity<?> addTransactions(
             @Valid @RequestBody List<TransactionModel> transactionModels) {
         transactionService.addTransaction(transactionModels);
         return ResponseEntity.noContent().build();
