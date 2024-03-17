@@ -23,7 +23,7 @@ public class CategoryController {
     private final CategoryService categoryService;
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping
-    public ResponseEntity<?> addTransactions(
+    public ResponseEntity<?> createCategories(
             @Valid @RequestBody List<CategoryModel> categoryModels) {
         categoryService.addCategories(categoryModels);
         return ResponseEntity.noContent().build();
