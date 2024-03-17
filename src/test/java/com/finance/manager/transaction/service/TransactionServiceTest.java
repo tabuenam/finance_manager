@@ -13,8 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static com.finance.manager.user.services.impl.UserServiceImplTestData.buildUserEntity;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
     @Mock
@@ -24,6 +28,7 @@ class TransactionServiceTest {
     @InjectMocks
     private TransactionService underTest;
     private UserEntity userEntity;
+
     @BeforeEach
     void setUp() {
         userEntity = buildUserEntity();
@@ -45,6 +50,18 @@ class TransactionServiceTest {
 
     @Test
     void itShouldPersistNewTransactionsToTheDB(){
+        //Arrange
+        when(authenticatedUserService.getAuthenticatedUser())
+                .thenReturn(userEntity);
+        List<TransactionModel> transactionModels =
+                List.of(buildTransactionModel());
+        //Act
+        underTest.addTransaction(transactionModels);
+        //Assert
+        verify(authenticatedUserService, times(1))
+                .getAuthenticatedUser();
+        verify(transactionRepository, times(1))
+                .saveAll(anyIterable());
 
     }
 
