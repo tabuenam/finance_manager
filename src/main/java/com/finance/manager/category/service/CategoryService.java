@@ -4,37 +4,34 @@ import com.finance.manager.category.database.Category;
 import com.finance.manager.category.model.CategoryModel;
 import com.finance.manager.category.repository.CategoryRepository;
 import com.finance.manager.user.database.UserEntity;
-import com.finance.manager.user.services.impl.UserService;
+import com.finance.manager.user.services.impl.AuthenticatedUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final UserService userService;
+    private final AuthenticatedUserService authenticatedUserService;
 
     public void addCategories(final List<CategoryModel> categoryModels) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = userService.findByUserMail(authentication.getName());
+        UserEntity authenticatedUser = authenticatedUserService.getAuthenticatedUser();
 
         List<Category> categories = categoryModels.stream()
-                .map(categoryModel -> mapToEntity(categoryModel, user))
+                .map(categoryModel -> mapToEntity(categoryModel, authenticatedUser.getId()))
                 .toList();
 
         categoryRepository.saveAll(categories);
     }
 
-    private Category mapToEntity(final CategoryModel categoryModel, final UserEntity user) {
+    protected Category mapToEntity(final CategoryModel categoryModel, final Long userId) {
         return Category.builder()
                 .categoryName(categoryModel.categoryName())
                 .description(categoryModel.categoryDescription())
-                .userId(user.getId())
+                .userId(userId)
                 .updatedAt(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .build();

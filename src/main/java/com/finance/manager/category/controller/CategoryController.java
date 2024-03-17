@@ -1,4 +1,4 @@
-package com.finance.manager.category;
+package com.finance.manager.category.controller;
 
 import com.finance.manager.category.model.CategoryModel;
 import com.finance.manager.category.service.CategoryService;
