@@ -4,7 +4,7 @@ A Personal Finance Manager (PFM) application that helps users track their expens
 1. Create a file named env.properties under resources<br>
    `cd src/main/resources/env.properties` <br>
 
-2. Add the following properties and fill them with your values. <br>
+2. Add the following properties and set them with your values. <br>
    `spring.mail.host=smtp.server.com` <br>
    `spring.mail.username=username` <br>
    `spring.mail.password=app-password`<br>
