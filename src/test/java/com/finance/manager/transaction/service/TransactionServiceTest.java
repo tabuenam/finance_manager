@@ -69,9 +69,8 @@ class TransactionServiceTest {
         return new TransactionModel(
                 1234.90f,
                 TransactionType.EXPENSE,
-                1L
+                1L,
+                "transaction model notes"
         );
     }
-
-
 }

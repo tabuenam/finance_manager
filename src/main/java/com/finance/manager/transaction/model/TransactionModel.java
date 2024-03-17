@@ -11,6 +11,7 @@ public record TransactionModel(
         @NotNull
         TransactionType transactionType,
         @NotNull
-        Long categoryId
+        Long categoryId,
+        String notes
 ) {
 }

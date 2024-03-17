@@ -34,6 +34,7 @@ public class TransactionService {
                 .transactionType(transactionModel.transactionType())
                 .categoryId(transactionModel.categoryId())
                 .userId(userId)
+                .notes(transactionModel.notes())
                 .amount(transactionModel.amount())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

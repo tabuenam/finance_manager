@@ -29,7 +29,6 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserService underTest;
-
     private UserEntity userEntity;
     private UserModel userModel;
     private UpdatePasswordRequestModel updatePasswordRequestModel;
