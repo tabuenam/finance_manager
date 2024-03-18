@@ -5,8 +5,6 @@ import com.finance.manager.category.model.CategoryModel;
 import com.finance.manager.category.repository.CategoryRepository;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.services.impl.AuthenticatedUserService;
-import com.finance.manager.user.services.impl.UserService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +14,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static com.finance.manager.category.CategoryTestData.buildCategoryModel;
 import static com.finance.manager.user.services.impl.UserServiceImplTestData.buildUserEntity;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
     @Mock
@@ -67,12 +66,5 @@ class CategoryServiceTest {
 
         verify(categoryRepository, times(1))
                 .saveAll(anyIterable());
-    }
-
-    CategoryModel buildCategoryModel(){
-        return new CategoryModel(
-                "House",
-                "All money transactions related to the house hold."
-        );
     }
 }
