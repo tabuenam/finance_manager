@@ -2,7 +2,6 @@ package com.finance.manager.category.controller;
 
 import com.finance.manager.category.model.CategoryModel;
 import com.finance.manager.category.service.CategoryService;
-import com.finance.manager.transaction.model.TransactionModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
