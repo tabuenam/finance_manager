@@ -59,6 +59,7 @@ class CategoryControllerTest {
         //Assert
         resultActions.andDo(print())
                 .andExpect(status().isNoContent());
+
 //                .andExpect(jsonPath("$.userName", is(userAccountDetailModel.userName())))
 //                .andExpect(jsonPath("$.email", is(userAccountDetailModel.email())));
 
