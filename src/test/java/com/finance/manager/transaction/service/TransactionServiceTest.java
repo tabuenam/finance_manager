@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static com.finance.manager.transaction.TransactionTestData.buildTransactionModel;
 import static com.finance.manager.user.services.impl.UserServiceImplTestData.buildUserEntity;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,16 +29,16 @@ class TransactionServiceTest {
     @InjectMocks
     private TransactionService underTest;
     private UserEntity userEntity;
+    private TransactionModel transactionModel;
 
     @BeforeEach
     void setUp() {
         userEntity = buildUserEntity();
+        transactionModel = buildTransactionModel();
     }
 
     @Test
     void itShouldMapToATransactionEntitySuccessfully(){
-        TransactionModel transactionModel = buildTransactionModel();
-
         Transaction transaction =
                 underTest.mapToTransaction(transactionModel, userEntity.getId());
 
@@ -54,7 +55,7 @@ class TransactionServiceTest {
         when(authenticatedUserService.getAuthenticatedUser())
                 .thenReturn(userEntity);
         List<TransactionModel> transactionModels =
-                List.of(buildTransactionModel());
+                List.of(transactionModel);
         //Act
         underTest.addTransaction(transactionModels);
         //Assert
@@ -63,14 +64,5 @@ class TransactionServiceTest {
         verify(transactionRepository, times(1))
                 .saveAll(anyIterable());
 
-    }
-
-    private TransactionModel buildTransactionModel() {
-        return new TransactionModel(
-                1234.90f,
-                TransactionType.EXPENSE,
-                1L,
-                "transaction model notes"
-        );
     }
 }

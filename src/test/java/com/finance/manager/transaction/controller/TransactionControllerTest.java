@@ -1,8 +1,10 @@
-package com.finance.manager.category.controller;
+package com.finance.manager.transaction.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finance.manager.category.model.CategoryModel;
+import com.finance.manager.category.controller.CategoryController;
 import com.finance.manager.category.service.CategoryService;
+import com.finance.manager.transaction.model.TransactionModel;
+import com.finance.manager.transaction.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,41 +20,41 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static com.finance.manager.category.CategoryTestData.buildCategoryModel;
+import static com.finance.manager.transaction.TransactionTestData.buildTransactionModel;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@WebMvcTest(CategoryController.class)
+@WebMvcTest(TransactionController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
-class CategoryControllerTest {
+class TransactionControllerTest {
     @MockBean
-    private CategoryService categoryService;
+    private TransactionService transactionService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    private CategoryModel categoryModel;
+    private TransactionModel transactionModel;
 
     @BeforeEach
     void setUp() {
-        categoryModel = buildCategoryModel();
+        transactionModel = buildTransactionModel();
     }
 
     @Test
-    void itShouldCreateNewCategories() throws Exception {
+    void itShouldCreateNewTransactions() throws Exception {
         //Arrange
-        doNothing().when(categoryService)
-                .addCategories(any());
+        doNothing().when(transactionService)
+                .addTransaction(any());
         //Act
         ResultActions resultActions =
-                mockMvc.perform(post("/api/v1/categories")
+                mockMvc.perform(post("/api/v1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(List.of(categoryModel)))
+                        .content(objectMapper.writeValueAsString(List.of(transactionModel)))
                         .with(SecurityMockMvcRequestPostProcessors.jwt())
                         .characterEncoding("UTF-8")
                 );
@@ -60,7 +62,7 @@ class CategoryControllerTest {
         resultActions.andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(categoryService, times(1))
-                .addCategories(any());
+        verify(transactionService, times(1))
+                .addTransaction(any());
     }
 }
