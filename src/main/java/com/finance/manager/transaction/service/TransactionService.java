@@ -24,7 +24,6 @@ public class TransactionService {
         List<Transaction> transactions = transactionModels.stream()
                 .map(transactionModel -> mapToTransaction(transactionModel, user.getId()))
                 .toList();
-
         transactionRepository.saveAll(transactions);
     }
 
