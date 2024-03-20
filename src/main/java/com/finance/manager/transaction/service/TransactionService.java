@@ -5,6 +5,7 @@ import com.finance.manager.transaction.model.TransactionModel;
 import com.finance.manager.transaction.repository.TransactionRepository;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.services.impl.AuthenticatedUserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,34 @@ public class TransactionService {
                 .map(transactionModel -> mapToTransaction(transactionModel, user.getId()))
                 .toList();
         transactionRepository.saveAll(transactions);
+    }
+
+    public TransactionModel updateTransaction(final TransactionModel transactionModel) {
+        Transaction transaction = transactionRepository.findById(transactionModel.transactionId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        transaction.setTransactionType(transactionModel.transactionType());
+        transaction.setUpdatedAt(LocalDateTime.now());
+        transaction.setNotes(transactionModel.notes());
+        transaction.setAmount(transactionModel.amount());
+        transaction.setCategoryId(transactionModel.categoryId());
+
+        Transaction updatedTransaction = transactionRepository.save(transaction);
+        return mapToModel(updatedTransaction);
+    }
+
+    public void deleteTransaction(final Long transactionId) {
+        transactionRepository.deleteById(transactionId);
+    }
+
+    protected TransactionModel mapToModel(final Transaction entity) {
+        return new TransactionModel(
+                entity.getTransactionId(),
+                entity.getAmount(),
+                entity.getTransactionType(),
+                entity.getCategoryId(),
+                entity.getNotes()
+        );
     }
 
     Transaction mapToTransaction(final TransactionModel transactionModel, final Long userId) {

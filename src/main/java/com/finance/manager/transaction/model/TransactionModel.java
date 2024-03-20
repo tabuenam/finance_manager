@@ -1,12 +1,13 @@
 package com.finance.manager.transaction.model;
 
 import com.finance.manager.transaction.util.TransactionType;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public record TransactionModel(
+        @NotNull
+        Long transactionId,
+        @Digits(integer = 4, fraction = 2)
         float amount,
         @NotNull
         TransactionType transactionType,

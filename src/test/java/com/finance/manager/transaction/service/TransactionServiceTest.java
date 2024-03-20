@@ -3,7 +3,6 @@ package com.finance.manager.transaction.service;
 import com.finance.manager.transaction.database.Transaction;
 import com.finance.manager.transaction.model.TransactionModel;
 import com.finance.manager.transaction.repository.TransactionRepository;
-import com.finance.manager.transaction.util.TransactionType;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.services.impl.AuthenticatedUserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,19 +37,21 @@ class TransactionServiceTest {
     }
 
     @Test
-    void itShouldMapToATransactionEntitySuccessfully(){
+    void itShouldMapToATransactionEntitySuccessfully() {
         Transaction transaction =
                 underTest.mapToTransaction(transactionModel, userEntity.getId());
 
-        assertNotNull(transaction);
-        assertEquals(userEntity.getId(), transaction.getUserId());
-        assertEquals(transactionModel.transactionType(), transaction.getTransactionType());
-        assertEquals(transactionModel.amount(), transaction.getAmount());
-        assertEquals(transactionModel.categoryId(), transaction.getCategoryId());
+        assertAll("transacion",
+                () -> assertNotNull(transaction),
+                () -> assertEquals(userEntity.getId(), transaction.getUserId()),
+                () -> assertEquals(transactionModel.transactionType(), transaction.getTransactionType()),
+                () -> assertEquals(transactionModel.amount(), transaction.getAmount()),
+                () -> assertEquals(transactionModel.categoryId(), transaction.getCategoryId())
+        );
     }
 
     @Test
-    void itShouldPersistNewTransactionsToTheDB(){
+    void itShouldPersistNewTransactionsToTheDB() {
         //Arrange
         when(authenticatedUserService.getAuthenticatedUser())
                 .thenReturn(userEntity);
@@ -63,6 +64,11 @@ class TransactionServiceTest {
                 .getAuthenticatedUser();
         verify(transactionRepository, times(1))
                 .saveAll(anyIterable());
+    }
+
+
+    @Test
+    void itShouldUpdate(){
 
     }
 }
