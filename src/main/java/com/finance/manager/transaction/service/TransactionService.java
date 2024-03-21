@@ -3,14 +3,17 @@ package com.finance.manager.transaction.service;
 import com.finance.manager.transaction.database.Transaction;
 import com.finance.manager.transaction.model.TransactionModel;
 import com.finance.manager.transaction.repository.TransactionRepository;
+import com.finance.manager.transaction.util.TransactionType;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.services.impl.AuthenticatedUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -19,9 +22,8 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AuthenticatedUserService authenticatedUserService;
 
-    public void addTransaction(final List<TransactionModel> transactionModels) {
+    public void createTransaction(final List<TransactionModel> transactionModels) {
         UserEntity user = authenticatedUserService.getAuthenticatedUser();
-
         List<Transaction> transactions = transactionModels.stream()
                 .map(transactionModel -> mapToTransaction(transactionModel, user.getId()))
                 .toList();
@@ -44,6 +46,28 @@ public class TransactionService {
 
     public void deleteTransaction(final Long transactionId) {
         transactionRepository.deleteById(transactionId);
+    }
+
+    public Collection<TransactionModel> getAllTransactions(final Pageable pageable) {
+        UserEntity user = authenticatedUserService.getAuthenticatedUser();
+        return transactionRepository.findAllByUserId(user.getId(), pageable)
+                .map(this::mapToModel)
+                .toList();
+    }
+
+    public TransactionModel getTransactionById(final Long transactionId) {
+        return transactionRepository.findById(transactionId)
+                .map(this::mapToModel)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Collection<TransactionModel> getTransactionByType(final TransactionType transactionType,
+                                                              final Pageable pageable) {
+        UserEntity user = authenticatedUserService.getAuthenticatedUser();
+        return transactionRepository
+                .findByTransactionTypeAndUserId(transactionType, user.getId(), pageable)
+                .map(this::mapToModel)
+                .toList();
     }
 
     protected TransactionModel mapToModel(final Transaction entity) {
