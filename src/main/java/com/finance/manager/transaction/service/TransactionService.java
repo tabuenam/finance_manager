@@ -80,7 +80,7 @@ public class TransactionService {
         );
     }
 
-    Transaction mapToTransaction(final TransactionModel transactionModel, final Long userId) {
+    protected Transaction mapToTransaction(final TransactionModel transactionModel, final Long userId) {
         return Transaction.builder()
                 .transactionDate(LocalDate.now())
                 .transactionType(transactionModel.transactionType())
