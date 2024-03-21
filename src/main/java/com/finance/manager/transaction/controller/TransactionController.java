@@ -24,7 +24,7 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<?> createTransactions(
             @Valid @RequestBody List<TransactionModel> transactionModels) {
-        transactionService.addTransaction(transactionModels);
+        transactionService.createTransaction(transactionModels);
         return ResponseEntity.noContent().build();
     }
 

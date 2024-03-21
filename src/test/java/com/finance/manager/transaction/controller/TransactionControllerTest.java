@@ -1,8 +1,6 @@
 package com.finance.manager.transaction.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finance.manager.category.controller.CategoryController;
-import com.finance.manager.category.service.CategoryService;
 import com.finance.manager.transaction.model.TransactionModel;
 import com.finance.manager.transaction.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static com.finance.manager.transaction.TransactionTestData.buildTransactionModel;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +46,7 @@ class TransactionControllerTest {
     void itShouldCreateNewTransactions() throws Exception {
         //Arrange
         doNothing().when(transactionService)
-                .addTransaction(any());
+                .createTransaction(any());
         //Act
         ResultActions resultActions =
                 mockMvc.perform(post("/api/v1/transactions")
@@ -63,6 +60,6 @@ class TransactionControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(transactionService, times(1))
-                .addTransaction(any());
+                .createTransaction(any());
     }
 }

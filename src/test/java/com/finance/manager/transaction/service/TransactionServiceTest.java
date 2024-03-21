@@ -58,7 +58,7 @@ class TransactionServiceTest {
         List<TransactionModel> transactionModels =
                 List.of(transactionModel);
         //Act
-        underTest.addTransaction(transactionModels);
+        underTest.createTransaction(transactionModels);
         //Assert
         verify(authenticatedUserService, times(1))
                 .getAuthenticatedUser();
