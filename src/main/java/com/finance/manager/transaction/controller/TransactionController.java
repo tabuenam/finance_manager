@@ -34,10 +34,9 @@ public class TransactionController {
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PutMapping
-    public ResponseEntity<?> updateTransaction(@Valid TransactionModel transactionModel) {
-        return new ResponseEntity<>(
-                transactionService.updateTransaction(transactionModel), HttpStatus.OK
-        );
+    public ResponseEntity<?> updateTransaction(@Valid @NotNull TransactionModel transactionModel) {
+        transactionService.updateTransaction(transactionModel);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")

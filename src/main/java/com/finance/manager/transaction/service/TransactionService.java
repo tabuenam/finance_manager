@@ -30,18 +30,23 @@ public class TransactionService {
         transactionRepository.saveAll(transactions);
     }
 
-    public TransactionModel updateTransaction(final TransactionModel transactionModel) {
-        Transaction transaction = transactionRepository.findById(transactionModel.transactionId())
-                .orElseThrow(EntityNotFoundException::new);
+    public void updateTransaction(final TransactionModel transactionModel) {
+        transactionRepository.findById(transactionModel.transactionId())
+                .ifPresentOrElse(
+                        transaction -> updateTransactionInDb(transactionModel, transaction),
+                        () -> {
+                            throw new EntityNotFoundException("Transaction could not be found");
+                        }
+                );
+    }
 
+    private void updateTransactionInDb(final TransactionModel transactionModel, Transaction transaction) {
         transaction.setTransactionType(transactionModel.transactionType());
         transaction.setUpdatedAt(LocalDateTime.now());
         transaction.setNotes(transactionModel.notes());
         transaction.setAmount(transactionModel.amount());
         transaction.setCategoryId(transactionModel.categoryId());
-
-        Transaction updatedTransaction = transactionRepository.save(transaction);
-        return mapToModel(updatedTransaction);
+        transactionRepository.save(transaction);
     }
 
     public void deleteTransaction(final Long transactionId) {
@@ -62,7 +67,7 @@ public class TransactionService {
     }
 
     public Collection<TransactionModel> getTransactionByType(final TransactionType transactionType,
-                                                              final Pageable pageable) {
+                                                             final Pageable pageable) {
         UserEntity user = authenticatedUserService.getAuthenticatedUser();
         return transactionRepository
                 .findByTransactionTypeAndUserId(transactionType, user.getId(), pageable)
