@@ -54,8 +54,7 @@ public class TransactionService {
     }
 
     private Transaction buildTransaction(final TransactionModel transaction) {
-        Authentication authentication = getAuthentication();
-        UserEntity user = userService.findByUserMail(authentication.getName());
+        UserEntity user = getUserEntity();
         return Transaction.builder()
                 .transactionDate(LocalDate.now())
                 .transactionType(transaction.transactionType())
@@ -79,5 +78,26 @@ public class TransactionService {
                     throw new NoSuchElementException("Transaction could not be found: " + transactionId);
                 }
         );
+    }
+
+    public Set<TransactionModel> findTransactions() {
+        UserEntity user = getUserEntity();
+        return transactionRepository.findAllByUserId(user.getId()).stream()
+                .map(this::buildTransactionModel)
+                .collect(toSet());
+    }
+
+    private TransactionModel buildTransactionModel(final Transaction transaction) {
+        return new TransactionModel(
+                transaction.getAmount(),
+                transaction.getTransactionType(),
+                transaction.getCategoryId(),
+                transaction.getNotes()
+        );
+    }
+
+    private UserEntity getUserEntity() {
+        Authentication authentication = getAuthentication();
+        return userService.findByUserMail(authentication.getName());
     }
 }
