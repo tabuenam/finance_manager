@@ -1,10 +1,10 @@
 package com.finance.manager.transaction.controller;
 
 import com.finance.manager.transaction.model.TransactionModel;
-import com.finance.manager.transaction.model.UpdateTransactionRequest;
 import com.finance.manager.transaction.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,15 +23,15 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<?> addUserTransaction(
             @Valid @RequestBody List<TransactionModel> transactionModels) {
-        transactionService.addTransaction(transactionModels);
+        transactionService.createTransaction(transactionModels);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PutMapping
     public ResponseEntity<?> updateTransaction(
-            @Valid @RequestBody UpdateTransactionRequest updateTransactionRequest) {
-        transactionService.updateTransaction(updateTransactionRequest);
+            @Valid @RequestBody TransactionModel transactionModel) {
+        transactionService.updateTransaction(transactionModel);
         return ResponseEntity.noContent().build();
     }
 
@@ -46,6 +46,6 @@ public class TransactionController {
     @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping
     public ResponseEntity<?> getTransactions() {
-        return ResponseEntity.ok(transactionService.findTransactions());
+        return ResponseEntity.ok(transactionService.getAllTransactions(PageRequest.of(0, 10)));
     }
 }
