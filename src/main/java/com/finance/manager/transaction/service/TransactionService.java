@@ -4,15 +4,17 @@ import com.finance.manager.transaction.database.Transaction;
 import com.finance.manager.transaction.model.TransactionModel;
 import com.finance.manager.transaction.model.UpdateTransactionRequest;
 import com.finance.manager.transaction.repository.TransactionRepository;
+import com.finance.manager.transaction.util.TransactionType;
 import com.finance.manager.user.database.UserEntity;
-import com.finance.manager.user.services.impl.UserService;
+import com.finance.manager.user.services.impl.AuthenticatedUserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -23,8 +25,38 @@ import static java.util.stream.Collectors.toSet;
 @RequiredArgsConstructor
 public class TransactionService {
     private final TransactionRepository transactionRepository;
-    private final UserService userService;
+    private final AuthenticatedUserService authenticatedUserService;
 
+    public void createTransaction(final List<TransactionModel> transactionModels) {
+        UserEntity user = authenticatedUserService.getAuthenticatedUser();
+        List<Transaction> transactions = transactionModels.stream()
+                .map(transactionModel -> mapToTransaction(transactionModel, user.getId()))
+                .toList();
+        transactionRepository.saveAll(transactions);
+    }
+
+    public void updateTransaction(final TransactionModel transactionModel) {
+        transactionRepository.findById(transactionModel.transactionId())
+                .ifPresentOrElse(
+                        transaction -> updateTransactionInDb(transactionModel, transaction),
+                        () -> {
+                            throw new EntityNotFoundException("Transaction could not be found");
+                        }
+                );
+    }
+
+    private void updateTransactionInDb(final TransactionModel transactionModel, Transaction transaction) {
+        transaction.setTransactionType(transactionModel.transactionType());
+        transaction.setUpdatedAt(LocalDateTime.now());
+        transaction.setNotes(transactionModel.notes());
+        transaction.setAmount(transactionModel.amount());
+        transaction.setCategoryId(transactionModel.categoryId());
+        transactionRepository.save(transaction);
+    }
+
+    public void deleteTransaction(final Long transactionId) {
+        transactionRepository.deleteById(transactionId);
+    }
     public void addTransaction(final List<TransactionModel> transactionModels) {
         Set<Transaction> transactions = transactionModels.stream()
                 .map(this::buildTransaction)
@@ -45,6 +77,49 @@ public class TransactionService {
                 );
     }
 
+    public Collection<TransactionModel> getAllTransactions(final Pageable pageable) {
+        UserEntity user = authenticatedUserService.getAuthenticatedUser();
+        return transactionRepository.findAllByUserId(user.getId(), pageable)
+                .map(this::mapToModel)
+                .toList();
+    }
+
+    public TransactionModel getTransactionById(final Long transactionId) {
+        return transactionRepository.findById(transactionId)
+                .map(this::mapToModel)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Collection<TransactionModel> getTransactionByType(final TransactionType transactionType,
+                                                             final Pageable pageable) {
+        UserEntity user = authenticatedUserService.getAuthenticatedUser();
+        return transactionRepository
+                .findByTransactionTypeAndUserId(transactionType, user.getId(), pageable)
+                .map(this::mapToModel)
+                .toList();
+    }
+
+    protected TransactionModel mapToModel(final Transaction entity) {
+        return new TransactionModel(
+                entity.getTransactionId(),
+                entity.getAmount(),
+                entity.getTransactionType(),
+                entity.getCategoryId(),
+                entity.getNotes()
+        );
+    }
+
+    protected Transaction mapToTransaction(final TransactionModel transactionModel, final Long userId) {
+        return Transaction.builder()
+                .transactionDate(LocalDate.now())
+                .transactionType(transactionModel.transactionType())
+                .categoryId(transactionModel.categoryId())
+                .userId(userId)
+                .notes(transactionModel.notes())
+                .amount(transactionModel.amount())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
     private void updateFoundTransaction(Transaction transaction, final TransactionModel transactionModel) {
         transaction.setUpdatedAt(LocalDateTime.now());
         transaction.setTransactionType(transactionModel.transactionType());
