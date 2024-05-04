@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -25,19 +28,22 @@ public class TransactionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserEntity user = userService.findByUserMail(authentication.getName());
 
-        List<Transaction> transactions = new ArrayList<>();
-        for (var transaction : transactionModels) {
-            Transaction newTransaction = Transaction.builder()
-                    .transactionDate(LocalDate.now())
-                    .transactionType(transaction.transactionType())
-                    .categoryId(transaction.categoryId())
-                    .userId(user.getId())
-                    .amount(transaction.amount())
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-            transactions.add(newTransaction);
-        }
+        Set<Transaction> transactions = transactionModels.stream()
+                .map(transactionModel -> buildTransaction(transactionModel, user))
+                .collect(toSet());
+
         transactionRepository.saveAll(transactions);
+    }
+
+    private Transaction buildTransaction(final TransactionModel transaction, final UserEntity user) {
+        return Transaction.builder()
+                .transactionDate(LocalDate.now())
+                .transactionType(transaction.transactionType())
+                .categoryId(transaction.categoryId())
+                .userId(user.getId())
+                .amount(transaction.amount())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
     }
 }
