@@ -23,7 +23,6 @@ public class TransactionService {
     private final AuthenticatedUserService authenticatedUserService;
 
     public void createTransaction(final List<TransactionModel> transactionModels) {
-
         List<Transaction> transactions = transactionModels
                 .stream()
                 .map(mapper::mapToEntity)
@@ -70,5 +69,4 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findByTransactionId(transactionId);
         transactionRepository.delete(transaction);
     }
-
 }

@@ -9,20 +9,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
-
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    Page<Transaction> findAllByUserId(@NotNull final Long userId,
-                                      @NotNull Pageable pageable);
-
     default Transaction findByTransactionId(@NotNull Long transactionId) {
         return findById(transactionId).orElseThrow(EntityNotFoundException::new);
     }
 
+    Page<Transaction> findAllByUserId(@NotNull final Long userId,
+                                      @NotNull Pageable pageable);
+
     Page<Transaction> findByTransactionTypeAndUserId(@NotNull final TransactionType transactionType,
                                                      @NotNull Long userId,
                                                      @NotNull Pageable pageable);
-
-    Set<Transaction> findAllByUserId(@NotNull Long userId);
 }
