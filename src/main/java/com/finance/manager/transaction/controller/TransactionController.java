@@ -35,7 +35,6 @@ public class TransactionController {
         return ResponseEntity.noContent().build();
     }
 
-
     @PreAuthorize("hasAuthority('SCOPE_WRITE') && hasAuthority('SCOPE_DELETE')")
     @DeleteMapping("/transaction-id/{transaction-id}")
     public ResponseEntity<?> deleteTransaction(@PathVariable(name = "transaction-id") Long transactionId) {
