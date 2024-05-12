@@ -1,44 +1,39 @@
 package com.finance.manager.transaction.service;
 
+import com.finance.manager.Mapper;
 import com.finance.manager.transaction.database.Transaction;
 import com.finance.manager.transaction.model.TransactionModel;
 import com.finance.manager.transaction.repository.TransactionRepository;
 import com.finance.manager.transaction.util.TransactionType;
 import com.finance.manager.user.database.UserEntity;
 import com.finance.manager.user.services.impl.AuthenticatedUserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final Mapper<Transaction, TransactionModel> mapper;
     private final AuthenticatedUserService authenticatedUserService;
 
     public void createTransaction(final List<TransactionModel> transactionModels) {
-        UserEntity user = authenticatedUserService.getAuthenticatedUser();
-        List<Transaction> transactions = transactionModels.stream()
-                .map(transactionModel -> mapToTransaction(transactionModel, user.getId()))
+
+        List<Transaction> transactions = transactionModels
+                .stream()
+                .map(mapper::mapToEntity)
                 .toList();
         transactionRepository.saveAll(transactions);
     }
 
     public void updateTransaction(final TransactionModel transactionModel) {
-        transactionRepository.findById(transactionModel.transactionId())
-                .ifPresentOrElse(
-                        transaction -> updateTransactionInDb(transactionModel, transaction),
-                        () -> {
-                            throw new EntityNotFoundException("Transaction could not be found");
-                        }
-                );
+        var transactionToUpdate = transactionRepository.findByTransactionId(transactionModel.transactionId());
+        updateTransactionInDb(transactionModel, transactionToUpdate);
     }
 
     private void updateTransactionInDb(final TransactionModel transactionModel, Transaction transaction) {
@@ -53,14 +48,13 @@ public class TransactionService {
     public Collection<TransactionModel> getAllTransactions(final Pageable pageable) {
         UserEntity user = authenticatedUserService.getAuthenticatedUser();
         return transactionRepository.findAllByUserId(user.getId(), pageable)
-                .map(this::mapToModel)
+                .map(mapper::mapToModel)
                 .toList();
     }
 
     public TransactionModel getTransactionById(final Long transactionId) {
-        return transactionRepository.findById(transactionId)
-                .map(this::mapToModel)
-                .orElseThrow(EntityNotFoundException::new);
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId);
+        return mapper.mapToModel(transaction);
     }
 
     public Collection<TransactionModel> getTransactionByType(final TransactionType transactionType,
@@ -68,40 +62,13 @@ public class TransactionService {
         UserEntity user = authenticatedUserService.getAuthenticatedUser();
         return transactionRepository
                 .findByTransactionTypeAndUserId(transactionType, user.getId(), pageable)
-                .map(this::mapToModel)
+                .map(mapper::mapToModel)
                 .toList();
     }
 
-    protected TransactionModel mapToModel(final Transaction entity) {
-        return new TransactionModel(
-                entity.getTransactionId(),
-                entity.getAmount(),
-                entity.getTransactionType(),
-                entity.getCategoryId(),
-                entity.getNotes()
-        );
-    }
-
-    protected Transaction mapToTransaction(final TransactionModel transactionModel, final Long userId) {
-        return Transaction.builder()
-                .transactionDate(LocalDate.now())
-                .transactionType(transactionModel.transactionType())
-                .categoryId(transactionModel.categoryId())
-                .userId(userId)
-                .notes(transactionModel.notes())
-                .amount(transactionModel.amount())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-    }
-
     public void deleteTransaction(final Long transactionId) {
-        transactionRepository.findByTransactionId(transactionId).ifPresentOrElse(
-                transactionRepository::delete
-                , () -> {
-                    throw new NoSuchElementException("Transaction could not be found: " + transactionId);
-                }
-        );
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId);
+        transactionRepository.delete(transaction);
     }
 
 }
