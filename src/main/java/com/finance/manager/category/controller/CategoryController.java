@@ -20,6 +20,7 @@ import java.util.List;
 @Validated
 public class CategoryController {
     private final CategoryService categoryService;
+
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping
     public ResponseEntity<?> createCategories(
