@@ -1,11 +1,15 @@
 package com.finance.manager.budget.database;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@Data
 @Table(name = "budgets")
 public class Budget {
     @Id
